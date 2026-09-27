@@ -73,7 +73,7 @@ public class LightTexture implements AutoCloseable {
     }
 
     public void updateLightmap(float partialTicks) {
-        this.client.gameSetthings.gamma = 10000.0F;
+        this.client.gameSettings.gamma = 10000.0F;
         if (this.needsUpdate) {
             this.client.getProfiler().startSection("lightTex");
             World world = this.client.world;
