@@ -51,8 +51,8 @@ public class GuiModMenu extends Screen {
         if (this.currentCategory.equals("All") || this.currentCategory.equals("Utility")) {
             this.addButton(new Button(modX, modY, modWidth, 20, "Fullbright: " + (fullbrightEnabled ? "ON" : "OFF"), (btn) -> {
                 this.fullbrightEnabled = !this.fullbrightEnabled;
-                this.minecraft.gameSettings.gamma = this.fullbrightEnabled ? 10000.0F : 1.0F;
-                btn.setMessage("Fullbright: " + (fullbrightEnabled ? "ON" : "OFF"));
+                this.mc.gameSettings.gamma = this.fullbrightEnabled ? 10000.0F : 1.0F;
+                btn .setMessage("Fullbright: " + (fullbrightEnabled ? "ON" : "OFF"));
             }));
             modY += 25;
         }
@@ -60,13 +60,13 @@ public class GuiModMenu extends Screen {
         if (this.currentCategory.equals("All") || this.currentCategory.equals("PvP")) {
             this.addButton(new Button(modX, modY, modWidth, 20, "Toggle Sprint: " + (toggleSprintEnabled ? "ON" : "OFF"), (btn) -> {
                 this.toggleSprintEnabled = !this.toggleSprintEnabled;
-                btn.setMessage("Toggle Sprint: " + (toggleSprintEnabled ? "ON" : "OFF"));
+                btn .setMessage("Toggle Sprint: " + (toggleSprintEnabled ? "ON" : "OFF"));
             }));
             modY += 25;
 
             this.addButton(new Button(modX, modY, modWidth, 20, "Toggle Crouch: " + (toggleCrouchEnabled ? "ON" : "OFF"), (btn) -> {
                 this.toggleCrouchEnabled = !this.toggleCrouchEnabled;
-                btn.setMessage("Toggle Crouch: " + (toggleCrouchEnabled ? "ON" : "OFF"));
+                btn .setMessage("Toggle Crouch: " + (toggleCrouchEnabled ? "ON" : "OFF"));
             }));
             modY += 25;
         }
@@ -74,7 +74,7 @@ public class GuiModMenu extends Screen {
         if (this.currentCategory.equals("All") || this.currentCategory.equals("Optimization")) {
             this.addButton(new Button(modX, modY, modWidth, 20, "Armor HUD: " + (armorHudEnabled ? "ON" : "OFF"), (btn) -> {
                 this.armorHudEnabled = !this.armorHudEnabled;
-                btn.setMessage("Armor HUD: " + (armorHudEnabled ? "ON" : "OFF"));
+                btn .setMessage("Armor HUD: " + (armorHudEnabled ? "ON" : "OFF"));
             }));
         }
     }
