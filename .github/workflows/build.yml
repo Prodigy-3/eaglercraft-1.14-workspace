@@ -22,6 +22,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: Build JS Target First
+        run: ./gradlew :target_teavm_javascript:makeMainOfflineDownload
+
       - name: Build WASM Bundle
         run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle
 
@@ -29,5 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eaglercraft-wasm-bundle
-          path: target_teavm_wasm_gc/build/teavm/out
+          path: target_teavm_wasm_gc/javascript_dist
+
+
 
