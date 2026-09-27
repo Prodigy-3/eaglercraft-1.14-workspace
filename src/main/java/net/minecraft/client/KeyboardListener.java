@@ -235,7 +235,10 @@ public class KeyboardListener {
         this.setClipboardString(s);
     }
 
-    public void onKeyEvent(long windowPointer, int key, int scanCode, int action, int modifiers) {
+public void  onKeyEvent(long windowPointer, int key, int scanCode, int action, int modifiers) {
+        if (key == 344 && action ==1) {
+            this.mc.displayGuiScreen(new net.minecraft .client.gui .GuiModMenu());
+        }    
         if (this.debugCrashKeyPressTime > 0L) {
             if (InputMappings.isKeyDown(292)) {
                 this.debugCrashKeyPressTime = -1L;
