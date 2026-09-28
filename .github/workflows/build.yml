@@ -25,23 +25,26 @@ jobs:
       - name: Build WASM-GC Client & EPW Assets
         run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle -x test || ./gradlew :target_teavm_wasm_gc:teavm -x test
 
-      - name: Bundle Build Artifacts
+      - name: Bundle All Client Files
         run: |
           mkdir -p dist
-          
-          # Copy outputs from TeaVM WASM distribution directory
-          if [ -d "target_teavm_wasm_gc/javascript_dist" ]; then
-            cp -r target_teavm_wasm_gc/javascript_dist/* dist/
-          elif [ -d "target_teavm_wasm_gc/javascript" ]; then
-            cp -r target_teavm_wasm_gc/javascript/* dist/
-          fi
-          
-          # Copy headers file for Netlify cross-origin policies
-          cp _headers dist/ 2>/dev/null || true
-          
-          # Collect any EPW or EPK asset files built elsewhere
+
+          # Copy everything generated under target_teavm_wasm_gc
+          cp -r target_teavm_wasm_gc/javascript_dist/* dist/ 2>/dev/null || true
+          cp -r target_teavm_wasm_gc/javascript/* dist/ 2>/dev/null || true
+
+          # Recursively pull all missing web assets and compiled binaries into dist
+          find . -name "index.html" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "loader.js" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "*.wasm" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "*.js" -exec cp {} dist/ \; 2>/dev/null || true
           find . -name "*.epw" -exec cp {} dist/ \; 2>/dev/null || true
           find . -name "*.epk" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "*.png" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "*.txt" -exec cp {} dist/ \; 2>/dev/null || true
+
+          # Copy Netlify security headers file
+          cp _headers dist/ 2>/dev/null || true
 
       - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
