@@ -22,18 +22,15 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build WASM Runtime and Assets
-        run: |
-          ./gradlew :target_teavm_wasm_gc:compileMainEpk
-          ./gradlew :target_teavm_wasm_gc:compileMainLanguageEpk
-          ./gradlew :target_teavm_wasm_gc:compileMainWasmRuntime
-          ./gradlew :target_teavm_wasm_gc:teavmCompileClient
+      - name: Build Full Project
+        run: ./gradlew build --no-daemon
 
-      - name: Bundle WASM Output
-        run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle
-
-      - name: Upload WASM Artifact
+      - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fresh-client-wasm-bundle
-          path: target_teavm_wasm_gc/javascript_dist
+          path: |
+            target_teavm_wasm_gc/javascript_dist
+            target_teavm_wasm_gc/build
+            javascript
+
