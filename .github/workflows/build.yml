@@ -25,16 +25,24 @@ jobs:
       - name: Build WASM Target
         run: ./gradlew :target_teavm_wasm_gc:teavm -x test
 
-      - name: Bundle Required Runtime Assets
+      - name: Bundle Build Artifacts
         run: |
-          cp _headers target_teavm_wasm_gc/javascript_dist/ 2>/dev/null || true
-          find . -name "assets.epk" -exec cp {} target_teavm_wasm_gc/javascript_dist/ \; 2>/dev/null || true
-          find . -name "eagruntime.js" -exec cp {} target_teavm_wasm_gc/javascript_dist/ \; 2>/dev/null || true
+          mkdir -p dist
+          # Copy TeaVM output files into dist
+          cp -r target_teavm_wasm_gc/javascript_dist/* dist/ 2>/dev/null || true
+          cp -r target_teavm_wasm_gc/javascript/* dist/ 2>/dev/null || true
+          cp -r javascript_dist/* dist/ 2>/dev/null || true
+          cp -r javascript/* dist/ 2>/dev/null || true
+          
+          # Copy _headers and asset files into dist
+          cp _headers dist/ 2>/dev/null || true
+          find . -maxdepth 3 -name "assets.epk" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -maxdepth 3 -name "eagruntime.js" -exec cp {} dist/ \; 2>/dev/null || true
 
       - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fresh-client-wasm-bundle
-          path: target_teavm_wasm_gc/javascript_dist
-          if-no-files-found: warn
+          path: dist
+          if-no-files-found: error
 
