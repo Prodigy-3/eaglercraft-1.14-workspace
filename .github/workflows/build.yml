@@ -23,12 +23,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build WASM Web Bundle
-        run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle -x test
+        run: |
+          ./gradlew :target_teavm_wasm_gc:teavmCompileClient -x test
+          ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle -x test
 
       - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fresh-client-wasm-bundle
           path: target_teavm_wasm_gc/javascript_dist
-
 
