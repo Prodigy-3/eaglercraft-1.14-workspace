@@ -22,20 +22,26 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build WASM Target & EPK Assets
-        run: ./gradlew :target_teavm_wasm_gc:teavm build -x test
+      - name: Build WASM-GC Client & EPW Assets
+        run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle -x test || ./gradlew :target_teavm_wasm_gc:teavm -x test
 
       - name: Bundle Build Artifacts
         run: |
           mkdir -p dist
           
-          # Copy TeaVM compiled JavaScript & WASM files
-          find . -type f \( -name "index.html" -o -name "*.wasm" -o -name "*.js" -o -name "*.png" -o -name "*.html" -o -name "*.txt" \) -exec cp {} dist/ \; 2>/dev/null || true
+          # Copy outputs from TeaVM WASM distribution directory
+          if [ -d "target_teavm_wasm_gc/javascript_dist" ]; then
+            cp -r target_teavm_wasm_gc/javascript_dist/* dist/
+          elif [ -d "target_teavm_wasm_gc/javascript" ]; then
+            cp -r target_teavm_wasm_gc/javascript/* dist/
+          fi
           
-          # Copy headers and assets
+          # Copy headers file for Netlify cross-origin policies
           cp _headers dist/ 2>/dev/null || true
-          find . -name "assets.epk" -exec cp {} dist/ \; 2>/dev/null || true
-          find . -name "eagruntime.js" -exec cp {} dist/ \; 2>/dev/null || true
+          
+          # Collect any EPW or EPK asset files built elsewhere
+          find . -name "*.epw" -exec cp {} dist/ \; 2>/dev/null || true
+          find . -name "*.epk" -exec cp {} dist/ \; 2>/dev/null || true
 
       - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
