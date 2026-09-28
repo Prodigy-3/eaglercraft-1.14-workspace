@@ -25,15 +25,16 @@ jobs:
       - name: Build WASM Target
         run: ./gradlew :target_teavm_wasm_gc:teavm -x test
 
+      - name: Bundle Required Runtime Assets
+        run: |
+          cp _headers target_teavm_wasm_gc/javascript_dist/ 2>/dev/null || true
+          find . -name "assets.epk" -exec cp {} target_teavm_wasm_gc/javascript_dist/ \; 2>/dev/null || true
+          find . -name "eagruntime.js" -exec cp {} target_teavm_wasm_gc/javascript_dist/ \; 2>/dev/null || true
+
       - name: Upload Fresh Client Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fresh-client-wasm-bundle
-          path: |
-            javascript
-            javascript_dist
-            target_teavm_wasm_gc/javascript
-            target_teavm_wasm_gc/javascript_dist
-            target_teavm_wasm_gc/build/teavm
+          path: target_teavm_wasm_gc/javascript_dist
           if-no-files-found: warn
 
