@@ -1,7 +1,7 @@
-name: Build Eaglercraft WASM Bundle
+name: Build Fresh Client WASM Bundle
 
 on:
-  push  :   
+  push:
     branches: [ "main" ]
   workflow_dispatch:
 
@@ -22,17 +22,18 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build JS Target First
-        run: ./gradlew :target_teavm_javascript:makeMainOfflineDownload
+      - name: Build WASM Runtime and Assets
+        run: |
+          ./gradlew :target_teavm_wasm_gc:compileMainEpk
+          ./gradlew :target_teavm_wasm_gc:compileMainLanguageEpk
+          ./gradlew :target_teavm_wasm_gc:compileMainWasmRuntime
+          ./gradlew :target_teavm_wasm_gc:teavmCompileClient
 
-      - name: Build WASM Bundle
+      - name: Bundle WASM Output
         run: ./gradlew :target_teavm_wasm_gc:makeMainWasmClientBundle
 
       - name: Upload WASM Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: eaglercraft-wasm-bundle
+          name: fresh-client-wasm-bundle
           path: target_teavm_wasm_gc/javascript_dist
-
-
-
